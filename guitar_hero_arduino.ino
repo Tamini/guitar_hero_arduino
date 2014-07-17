@@ -9,7 +9,7 @@ int currNotes[4] = {0, 0, 0, 0};
 int pause = 2;
 int strum = 3;
 int difficulty = 0;
-int clockPin = 0;
+int clockPin = 12;
 boolean correct = true;
 boolean firstRun = true;
 void setup()
@@ -72,11 +72,17 @@ void loop()
       digitalWrite(outPins[i], 1);
     }
     delay(1000);
+    digitalWrite(clockPin, HIGH);
+    delay(5);
+    digitalWrite(clockPin, LOW);
     for (int i = 0; i < 4; i++)
     {
       digitalWrite(outPins[i], 0);
     }
     delay(1000);
+    digitalWrite(clockPin, HIGH);
+    delay(5);
+    digitalWrite(clockPin, LOW);
   }
 }
 
