@@ -117,7 +117,7 @@ boolean compareArrays ()
 }
 void randomNotes()
 {
-  for (int i = 0; !firstRun && i < difficulty && i < 5; i++)
+  for (int i = 0; i < difficulty && i < 5; i++)
   {
     randomSeed(millis());
     nextNotes[random(4)] = 1;
