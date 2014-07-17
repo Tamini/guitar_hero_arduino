@@ -35,14 +35,16 @@ void loop()
     difficulty++;
     randomNotes();
     // Bug checking/serial monitor output
-    for (int i = 0; i < 4; i++)
-      Serial.print(currNotes[i]);
+    Serial.print("Level: ");
+    Serial.println(difficulty);
+    Serial.println("NEXT NOTES");
     Serial.println(" ");
     for (int i = 0; i < 4; i++)
       Serial.print(nextNotes[i]);
+    Serial.println("CURRENT NOTES");
+    for (int i = 0; i < 4; i++)
+      Serial.print(currNotes[i]);
     Serial.println(" ");
-    Serial.print("Level: ");
-    Serial.println(difficulty);
     // Adjustment to make sure we get correct array indexes
     int adjust = 0;
     digitalWrite(clockPin, HIGH);
