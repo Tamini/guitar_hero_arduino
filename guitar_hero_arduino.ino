@@ -105,7 +105,7 @@ void randomNotes()
 void PAUSE_HANDLER()
 {
   pauseState = !pauseState;
-  while (pauseState == LOW)
+  while (pauseState == HIGH)
   {
     // Wait
   }
