@@ -1,7 +1,7 @@
 volatile int pauseState = LOW;
 volatile int strumState = LOW;
 int outPins[4] = {7, 8, 9, 10};
-int buttonInputs[4] = {11, 4, 5, 6};
+int buttonInputs[4] = {13, 4, 5, 6};
 int inputStates[4];
 // Don't want to use a 2D array
 int nextNotes[4];
@@ -55,9 +55,12 @@ void loop()
     {
       digitalWrite(outPins[i], nextNotes[i]);
     }
-    delay(1000);
     // Check button pushes
-    getInputs();
+    for (int i = 0; i < 6; i ++)
+    {
+      delay(500);
+      getInputs();
+    }
     // Bug checking/serial monitor output
     Serial.println ("INPUTS: ");
     for (int i = 0; i < 4; i++)
