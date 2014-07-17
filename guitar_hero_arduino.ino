@@ -33,7 +33,6 @@ void loop()
 {
   if (correct){
     difficulty++;
-  }
     randomNotes();
     // Bug checking/serial monitor output
     for (int i = 0; i < 4; i++)
@@ -42,6 +41,8 @@ void loop()
     for (int i = 0; i < 4; i++)
       Serial.print(nextNotes[i]);
     Serial.println(" ");
+    Serial.print("Level: ");
+    Serial.println(difficulty);
     // Adjustment to make sure we get correct array indexes
     int adjust = 0;
     digitalWrite(clockPin, HIGH);
@@ -63,6 +64,20 @@ void loop()
     strumState = LOW;
     for (int reset = 0; reset < 4; reset++)
       nextNotes[reset] = 0;
+  }
+  else
+  {
+    for (int i = 0; i < 4; i++)
+    {
+      digitalWrite(outPins[i], 1);
+    }
+    delay(1000);
+    for (int i = 0; i < 4; i++)
+    {
+      digitalWrite(outPins[i], 0);
+    }
+    delay(1000);
+  }
 }
 
 void updateCurrent()
