@@ -33,6 +33,7 @@ void loop()
 {
   if (correct){
     difficulty++;
+  }
     randomNotes();
     // Bug checking/serial monitor output
     for (int i = 0; i < 4; i++)
@@ -62,7 +63,6 @@ void loop()
     strumState = LOW;
     for (int reset = 0; reset < 4; reset++)
       nextNotes[reset] = 0;
-  }
 }
 
 void updateCurrent()
@@ -105,10 +105,10 @@ void randomNotes()
 void PAUSE_HANDLER()
 {
   pauseState = !pauseState;
-  while (pauseState == HIGH)
-  {
+  //while (pauseState == HIGH)
+  //{
     // Wait
-  }
+  //}
 }
 void STRUM_HANDLER ()
 {
