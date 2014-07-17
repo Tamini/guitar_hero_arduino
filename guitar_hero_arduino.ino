@@ -56,6 +56,11 @@ void loop()
     delay(1000);
     // Check button pushes
     getInputs();
+    // Bug checking/serial monitor output
+    Serial.println ("INPUTS: ");
+    for (int i = 0; i < 4; i++)
+      Serial.print(inputStates[i]);
+    Serial.println(" ");
     correct = compareArrays();
     firstRun = false;
     // Shift array
