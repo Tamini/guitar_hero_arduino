@@ -38,9 +38,9 @@ void loop()
     Serial.print("Level: ");
     Serial.println(difficulty);
     Serial.println("NEXT NOTES");
-    Serial.println(" ");
     for (int i = 0; i < 4; i++)
       Serial.print(nextNotes[i]);
+    Serial.println(" ");
     Serial.println("CURRENT NOTES");
     for (int i = 0; i < 4; i++)
       Serial.print(currNotes[i]);
@@ -104,10 +104,13 @@ void updateCurrent()
 
 void getInputs()
 {
+  Serial.println ("Raw inputs:");
   for (int inCount = 0; inCount < 4; inCount++)
   {
+    Serial.print(digitalRead(buttonInputs[inCount]);
     inputStates[inCount] = digitalRead(buttonInputs[inCount]);
   }
+  Serial.println (" ");
 }
 boolean compareArrays ()
 {
