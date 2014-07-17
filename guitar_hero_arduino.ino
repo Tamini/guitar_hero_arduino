@@ -1,7 +1,7 @@
 volatile int pauseState = LOW;
 volatile int strumState = LOW;
 int outPins[4] = {7, 8, 9, 10};
-int buttonInputs[4] = {1, 4, 5, 6};
+int buttonInputs[4] = {11, 4, 5, 6};
 int inputStates[4];
 // Don't want to use a 2D array
 int nextNotes[4];
