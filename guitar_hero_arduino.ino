@@ -1,7 +1,7 @@
 volatile int pauseState = LOW;
 volatile int strumState = LOW;
 int outPins[4] = {7, 8, 9, 10};
-int buttonInputs[4] = {0, 4, 5, 6};
+int buttonInputs[4] = {1, 4, 5, 6};
 int inputStates[4];
 // Don't want to use a 2D array
 int nextNotes[4];
@@ -9,6 +9,7 @@ int currNotes[4] = {0, 0, 0, 0};
 int pause = 2;
 int strum = 3;
 int difficulty = 0;
+int clockPin = 0;
 boolean correct = true;
 boolean firstRun = true;
 void setup()
@@ -40,6 +41,9 @@ void loop()
     Serial.println(" ");
     // Adjustment to make sure we get correct array indexes
     int adjust = 0;
+    digitalWrite(clockPin, HIGH);
+    delay(5);
+    digitalWrite(clockPin, LOW);
     // Output pins (should be from output range, not 0-2)
     for (int i = 0; i < 4; i++)
     {
@@ -90,7 +94,7 @@ boolean compareArrays ()
 }
 void randomNotes()
 {
-  for (int i = 0; i < difficulty && i < 5; i++)
+  for (int i = 0; !firstRun && i < difficulty && i < 5; i++)
   {
     randomSeed(millis());
     nextNotes[random(4)] = 1;
