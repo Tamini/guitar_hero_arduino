@@ -20,6 +20,8 @@ void setup()
     pinMode(buttonInputs[currPin], INPUT);
     pinMode(outPins[currPin], OUTPUT);
   }
+  // Clock pin output
+  pinMode(clockPin, OUTPUT);
   // Pause interrupt
   attachInterrupt(0, PAUSE_HANDLER, CHANGE);
   // Strum
