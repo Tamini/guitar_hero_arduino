@@ -1,20 +1,11 @@
 volatile int pauseState = LOW;
 volatile int strumState = LOW;
 int outPins[4] = {7, 8, 9, 10};
-int buttonInputs[4] = {3, 4, 5, 6};
+int buttonInputs[4] = {0, 4, 5, 6};
 int inputStates[4];
-//int redOut = 4;
-//int redIn = 5;
-//int blue0 = 6;
-//int blue1 = 7;
-//int yellow0 = 8;
-//int yellow1 = 9;
-//int green0 = 10;
-//int green1 = 11;
 // Don't want to use a 2D array
 int nextNotes[4];
 int currNotes[4] = {0, 0, 0, 0};
-int convNotes[3];
 int pause = 2;
 int strum = 3;
 int difficulty = 0;
@@ -47,13 +38,12 @@ void loop()
     for (int i = 0; i < 4; i++)
       Serial.print(nextNotes[i]);
     Serial.println(" ");
-    convert();
     // Adjustment to make sure we get correct array indexes
     int adjust = 0;
     // Output pins (should be from output range, not 0-2)
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 4; i++)
     {
-      digitalWrite(i, convNotes[i-adjust]);
+      digitalWrite(outPins[i], nextNotes[i]);
     }
     delay(1000);
     // Check button pushes
@@ -104,14 +94,6 @@ void randomNotes()
   {
     randomSeed(millis());
     nextNotes[random(4)] = 1;
-  }
-}
-void convert()
-{
-  // TEMP TEST
-  for (int i=0; i < 3; i++)
-  {
-    convNotes[i] = nextNotes[i];
   }
 }
 void PAUSE_HANDLER()
