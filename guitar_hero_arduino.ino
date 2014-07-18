@@ -56,11 +56,11 @@ void loop()
       digitalWrite(outPins[i], nextNotes[i]);
     }
     // Check button pushes
-    for (int i = 0; i < 6; i ++)
-    {
-      delay(500);
-      getInputs();
-    }
+    //for (int i = 0; i < 6; i ++)
+    //{
+      //delay(500);
+     // getInputs();
+    //}
     // Bug checking/serial monitor output
     Serial.println ("INPUTS: ");
     for (int i = 0; i < 4; i++)
@@ -147,4 +147,5 @@ void STRUM_HANDLER ()
 {
   strumState = HIGH;
   Serial.println("STRUM SET HIGH");
+  getInputs();
 }
