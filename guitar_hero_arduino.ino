@@ -71,7 +71,7 @@ void loop()
     // Shift array
     updateCurrent();
     // Reset
-    strumState = LOW;
+    //strumState = LOW;
     for (int reset = 0; reset < 4; reset++)
       nextNotes[reset] = 0;
   }
@@ -107,13 +107,10 @@ void updateCurrent()
 
 void getInputs()
 {
-  Serial.println ("Raw inputs:");
   for (int inCount = 0; inCount < 4; inCount++)
   {
-    Serial.print(digitalRead(buttonInputs[inCount]);
     inputStates[inCount] = digitalRead(buttonInputs[inCount]);
   }
-  Serial.println (" ");
 }
 boolean compareArrays ()
 {
@@ -124,15 +121,17 @@ boolean compareArrays ()
   for (int note = 0; note < 4; note++)
   {
     if (inputStates[note] != currNotes[note])
+    {
       return false;
+    }
   }
   return true;
 }
 void randomNotes()
 {
-  for (int i = 0; i < difficulty && i < 5; i++)
+  for (int i = 0; i < difficulty && i < 8; i++)
   {
-    randomSeed(millis());
+    randomSeed(analogRead(0));
     nextNotes[random(4)] = 1;
   }
 }
@@ -147,4 +146,5 @@ void PAUSE_HANDLER()
 void STRUM_HANDLER ()
 {
   strumState = HIGH;
+  Serial.println("STRUM SET HIGH");
 }
