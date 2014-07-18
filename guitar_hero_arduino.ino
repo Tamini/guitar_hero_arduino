@@ -1,7 +1,7 @@
 volatile int pauseState = LOW;
-volatile int strumState = LOW;
+// volatile int strumState = LOW;
 int outPins[4] = {7, 8, 9, 10};
-int buttonInputs[4] = {13, 4, 5, 6};
+volatile int buttonInputs[4] = {13, 4, 5, 6};
 int inputStates[4];
 // Don't want to use a 2D array
 int nextNotes[4];
@@ -116,8 +116,8 @@ boolean compareArrays ()
 {
   if (firstRun)
     return true;
-  if (strumState == LOW)
-    return false;
+ // if (strumState == LOW)
+  //  return false;
   for (int note = 0; note < 4; note++)
   {
     if (inputStates[note] != currNotes[note])
@@ -145,7 +145,7 @@ void PAUSE_HANDLER()
 }
 void STRUM_HANDLER ()
 {
-  strumState = HIGH;
+  //strumState = HIGH;
   Serial.println("STRUM SET HIGH");
   getInputs();
 }
