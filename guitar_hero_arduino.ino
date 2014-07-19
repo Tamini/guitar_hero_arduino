@@ -1,17 +1,19 @@
 volatile int pauseState = LOW;
-// volatile int strumState = LOW;
+volatile int strumState = LOW;
 int outPins[4] = {7, 8, 9, 10};
 volatile int buttonInputs[4] = {13, 4, 5, 6};
 int inputStates[4];
 // Don't want to use a 2D array
 int nextNotes[4];
 int currNotes[4] = {0, 0, 0, 0};
+int oldNotes[4] = {1,1,1,1};
 int pause = 2;
 int strum = 3;
 int difficulty = 0;
 int clockPin = 12;
 boolean correct = true;
 boolean firstRun = true;
+boolean uniqueNotes = true;
 void setup()
 {
   // Setup coloured buttons as inputs and output pins
@@ -23,9 +25,9 @@ void setup()
   // Clock pin output
   pinMode(clockPin, OUTPUT);
   // Pause interrupt
-  attachInterrupt(0, PAUSE_HANDLER, CHANGE);
+  attachInterrupt(0, PAUSE_HANDLER, HIGH);
   // Strum
-  attachInterrupt(1, STRUM_HANDLER, HIGH);
+  attachInterrupt(1, STRUM_HANDLER, CHANGE);
   // Just in case, serial
   Serial.begin(9600);
 }
@@ -33,7 +35,15 @@ void loop()
 {
   if (correct){
     difficulty++;
-    randomNotes();
+    do{
+      randomNotes();
+      // Make sure notes aren't same as before
+      for (int currNote = 0; !uniqueNotes && currNote < 4; currNote++)
+      {
+        if (oldNotes[currNote] != nextNotes[currNote])
+          uniqueNotes = true;
+      }
+    }while(!uniqueNotes);
     // Bug checking/serial monitor output
     Serial.print("Level: ");
     Serial.println(difficulty);
@@ -46,7 +56,11 @@ void loop()
       Serial.print(currNotes[i]);
     Serial.println(" ");
     // Adjustment to make sure we get correct array indexes
-    int adjust = 0;
+    int adjust = 0;    
+    while (pauseState == HIGH)
+    {
+      // Wait
+    }
     digitalWrite(clockPin, HIGH);
     delay(5);
     digitalWrite(clockPin, LOW);
@@ -61,8 +75,14 @@ void loop()
       //delay(500);
      // getInputs();
     //}
+    delay(400);
+    delay(400);
+    delay(400);
+    delay(400);
+    delay(400);
+    delay(400);
     // Bug checking/serial monitor output
-    Serial.println ("INPUTS: ");
+    Serial.println ("INPUTS READ: ");
     for (int i = 0; i < 4; i++)
       Serial.print(inputStates[i]);
     Serial.println(" ");
@@ -71,9 +91,15 @@ void loop()
     // Shift array
     updateCurrent();
     // Reset
-    //strumState = LOW;
+    strumState = LOW;
+    Serial.println("Strum SET LOW");
+    // Deep copy of next notes and wipe of next notes
     for (int reset = 0; reset < 4; reset++)
+    {
+      oldNotes[reset] = nextNotes[reset];
       nextNotes[reset] = 0;
+    }
+    uniqueNotes = false;
   }
   else
   {
@@ -108,7 +134,7 @@ void updateCurrent()
 void getInputs()
 {
   for (int inCount = 0; inCount < 4; inCount++)
-  {
+  { 
     inputStates[inCount] = digitalRead(buttonInputs[inCount]);
   }
 }
@@ -129,7 +155,7 @@ boolean compareArrays ()
 }
 void randomNotes()
 {
-  for (int i = 0; i < difficulty && i < 8; i++)
+  for (int i = 0; i < difficulty && i < 6; i++)
   {
     randomSeed(analogRead(0));
     nextNotes[random(4)] = 1;
@@ -137,15 +163,13 @@ void randomNotes()
 }
 void PAUSE_HANDLER()
 {
-  pauseState = !pauseState;
-  //while (pauseState == HIGH)
-  //{
-    // Wait
-  //}
+  //pauseState = !pauseState;
 }
 void STRUM_HANDLER ()
 {
-  //strumState = HIGH;
-  Serial.println("STRUM SET HIGH");
-  getInputs();
+  if (strumState == LOW){
+    //Serial.println("STRUM SET HIGH");
+    getInputs();
+    strumState = HIGH;
+  }
 }
