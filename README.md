@@ -11,5 +11,7 @@ There is also a paues button if the user needs to pause for whatever reason.
 The strum and pause buttons use interrupts to interact with the program, this allows me to write simpler code because the interrupts will always take priorty.
 
 Other Group members:
+
 Aaron Wiersma
+
 Mousa Khan
