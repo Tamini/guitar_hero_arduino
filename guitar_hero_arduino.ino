@@ -139,7 +139,7 @@ void myDelay(int millSec)
   while (totLoops != 0)
   {
     if (TCNT1 >= 125){
-      --totLoopss;
+      --totLoops;
       TCNT1 = 0;
     }
   }
