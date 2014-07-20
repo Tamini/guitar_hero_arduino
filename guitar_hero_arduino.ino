@@ -9,7 +9,8 @@ int currNotes[4] = {0, 0, 0, 0};
 int oldNotes[4] = {1,1,1,1};
 int pause = 2;
 int strum = 3;
-int difficulty = 0;
+int difficulty = 1;
+int diffProgress = 0;
 int clockPin = 12;
 boolean correct = true;
 boolean firstRun = true;
@@ -38,7 +39,16 @@ void setup()
 void loop()
 {
   if (true){
-    difficulty++;
+    if (diffProgress == 6)
+    {
+      difficulty++;
+      diffProgress = 0;
+      Serial.println ("Level up");
+    }
+    else
+    {
+      diffProgress++;  
+    }
     do{
       randomNotes();
       // Make sure notes aren't same as before
@@ -74,12 +84,11 @@ void loop()
       digitalWrite(outPins[i], nextNotes[i]);
     }
     // Give time for button pushes and strum
-    myDelay(400);
-    myDelay(400);
-    myDelay(400);
-    myDelay(400);
-    myDelay(400);
-    myDelay(400);
+    int delayCount = 8;
+    do{
+      myDelay(400);
+      --delayCount;
+    }while(delayCount - difficulty > 0);
     // Bug checking/serial monitor output
     Serial.println ("INPUTS READ: ");
     for (int i = 0; i < 4; i++)
@@ -106,17 +115,17 @@ void loop()
     {
       digitalWrite(outPins[i], 1);
     }
-    delay(1000);
+    myDelay(1000);
     digitalWrite(clockPin, HIGH);
-    delay(5);
+    myDelay(5);
     digitalWrite(clockPin, LOW);
     for (int i = 0; i < 4; i++)
     {
       digitalWrite(outPins[i], 0);
     }
-    delay(1000);
+    myDelay(1000);
     digitalWrite(clockPin, HIGH);
-    delay(5);
+    myDelay(5);
     digitalWrite(clockPin, LOW);
   }
 }
@@ -156,8 +165,9 @@ boolean compareArrays ()
 {
   if (firstRun)
     return true;
- // if (strumState == LOW)
-  //  return false;
+  // Quit early
+  if (strumState == LOW)
+    return false;
   for (int note = 0; note < 4; note++)
   {
     if (inputStates[note] != currNotes[note])
