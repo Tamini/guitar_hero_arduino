@@ -14,8 +14,12 @@ int clockPin = 12;
 boolean correct = true;
 boolean firstRun = true;
 boolean uniqueNotes = true;
+
 void setup()
 {
+  // Timer1 to 0, pre scale to 4 (/256)
+  TCNT1 = 0;
+  TCCR1B = (_BV(CS02));
   // Setup coloured buttons as inputs and output pins
   for (int currPin = 0; currPin < 4; currPin++)
   {
@@ -33,7 +37,7 @@ void setup()
 }
 void loop()
 {
-  if (correct){
+  if (true){
     difficulty++;
     do{
       randomNotes();
@@ -69,18 +73,13 @@ void loop()
     {
       digitalWrite(outPins[i], nextNotes[i]);
     }
-    // Check button pushes
-    //for (int i = 0; i < 6; i ++)
-    //{
-      //delay(500);
-     // getInputs();
-    //}
-    delay(400);
-    delay(400);
-    delay(400);
-    delay(400);
-    delay(400);
-    delay(400);
+    // Give time for button pushes and strum
+    myDelay(400);
+    myDelay(400);
+    myDelay(400);
+    myDelay(400);
+    myDelay(400);
+    myDelay(400);
     // Bug checking/serial monitor output
     Serial.println ("INPUTS READ: ");
     for (int i = 0; i < 4; i++)
@@ -128,6 +127,21 @@ void updateCurrent()
   for (int i = 0; i < 4; i++)
   {
     currNotes[i] = nextNotes[i];
+  }
+}
+
+void myDelay(int millSec)
+{
+  // Reset timer
+  TCNT1=0;
+  // Two ms pass when TCNT1 = 125
+  int totLoops = millSec / 2;
+  while (totLoops != 0)
+  {
+    if (TCNT1 >= 125){
+      --totLoopss;
+      TCNT1 = 0;
+    }
   }
 }
 
