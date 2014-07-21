@@ -1,8 +1,9 @@
 volatile int pauseState = LOW;
 volatile int strumState = LOW;
 int outPins[4] = {7, 8, 9, 10};
-volatile int buttonInputs[4] = {13, 4, 5, 6};
-int inputStates[4];
+volatile int speakerPin = 13;
+volatile int buttonInputs[4] = {11, 4, 5, 6};
+volatile int inputStates[4];
 // Don't want to use a 2D array
 int nextNotes[4];
 int currNotes[4] = {0, 0, 0, 0};
@@ -15,6 +16,8 @@ int clockPin = 12;
 boolean correct = true;
 boolean firstRun = true;
 boolean uniqueNotes = true;
+volatile int midFreq= 1500;
+volatile int setFreq[4] = {-750, -250, 250, 750};
 
 void setup()
 {
@@ -27,6 +30,8 @@ void setup()
     pinMode(buttonInputs[currPin], INPUT);
     pinMode(outPins[currPin], OUTPUT);
   }
+  // Speaker pin
+  pinMode(speakerPin, OUTPUT);
   // Clock pin output
   pinMode(clockPin, OUTPUT);
   // Pause interrupt
@@ -76,7 +81,7 @@ void loop()
       // Wait
     }
     digitalWrite(clockPin, HIGH);
-    delay(5);
+    myDelay(6);
     digitalWrite(clockPin, LOW);
     // Output pins (should be from output range, not 0-2)
     for (int i = 0; i < 4; i++)
@@ -161,13 +166,27 @@ void getInputs()
     inputStates[inCount] = digitalRead(buttonInputs[inCount]);
   }
 }
+
+void playSound()
+{
+  int outFreq = midFreq;
+  for (int currButton = 0; currButton < 4; currButton++)
+  {
+    if (inputStates[currButton] == 1)
+      outFreq += setFreq[currButton];
+  }
+  tone(speakerPin, outFreq, 400);
+}
+
 boolean compareArrays ()
 {
+  // No notes first time
   if (firstRun)
     return true;
   // Quit early
   if (strumState == LOW)
     return false;
+  // Check that inputs are correct
   for (int note = 0; note < 4; note++)
   {
     if (inputStates[note] != currNotes[note])
@@ -179,21 +198,28 @@ boolean compareArrays ()
 }
 void randomNotes()
 {
+  // Randomly generate next set of notes
   for (int i = 0; i < difficulty && i < 6; i++)
   {
+    // Seed random number generator with an unconnected pin
     randomSeed(analogRead(0));
     nextNotes[random(4)] = 1;
   }
 }
+
 void PAUSE_HANDLER()
 {
   //pauseState = !pauseState;
 }
 void STRUM_HANDLER ()
 {
+  // Only first strum per set of notes is counted
   if (strumState == LOW){
     //Serial.println("STRUM SET HIGH");
+    // Read button states
     getInputs();
+    // Play sound corresponding to button states
+    playSound();
     strumState = HIGH;
   }
 }
