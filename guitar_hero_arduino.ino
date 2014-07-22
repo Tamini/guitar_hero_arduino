@@ -43,18 +43,22 @@ void setup()
 }
 void loop()
 {
-  if (true){
+  // Make sure last set of inputs was right
+  if (correct){
+    // Check if difficulty should increase
     if (diffProgress == 6)
     {
       difficulty++;
       diffProgress = 0;
       Serial.println ("Level up");
     }
+    // Difficulty does not increase, but progress through level
     else
     {
       diffProgress++;  
     }
     do{
+      // Generate random notes to output next
       randomNotes();
       // Make sure notes aren't same as before
       for (int currNote = 0; !uniqueNotes && currNote < 4; currNote++)
@@ -73,17 +77,16 @@ void loop()
     Serial.println("CURRENT NOTES");
     for (int i = 0; i < 4; i++)
       Serial.print(currNotes[i]);
-    Serial.println(" ");
-    // Adjustment to make sure we get correct array indexes
-    int adjust = 0;    
+    Serial.println(" "); 
     while (pauseState == HIGH)
     {
       // Wait
     }
+    // Clock HIGH and back to LOW
     digitalWrite(clockPin, HIGH);
     myDelay(6);
     digitalWrite(clockPin, LOW);
-    // Output pins (should be from output range, not 0-2)
+    // Write next set of lights
     for (int i = 0; i < 4; i++)
     {
       digitalWrite(outPins[i], nextNotes[i]);
@@ -99,6 +102,7 @@ void loop()
     for (int i = 0; i < 4; i++)
       Serial.print(inputStates[i]);
     Serial.println(" ");
+    // Determine if the inputs were correct
     correct = compareArrays();
     firstRun = false;
     // Shift array
@@ -114,6 +118,7 @@ void loop()
     }
     uniqueNotes = false;
   }
+  // Inputs were wrong, flash lights
   else
   {
     for (int i = 0; i < 4; i++)
@@ -135,6 +140,7 @@ void loop()
   }
 }
 
+// Copy next notes to current notes
 void updateCurrent()
 {
   // Copy next notes to current notes
@@ -144,6 +150,7 @@ void updateCurrent()
   }
 }
 
+// Custom delay function because we weren't supposed to use built-in one
 void myDelay(int millSec)
 {
   // Reset timer
@@ -152,13 +159,16 @@ void myDelay(int millSec)
   int totLoops = millSec / 2;
   while (totLoops != 0)
   {
+    // If counter reached/exceeded 125, 2ms have passed
     if (TCNT1 >= 125){
+      // Reset counter
       --totLoops;
       TCNT1 = 0;
     }
   }
 }
 
+// Read in inputs and save them
 void getInputs()
 {
   for (int inCount = 0; inCount < 4; inCount++)
@@ -167,9 +177,11 @@ void getInputs()
   }
 }
 
+// Play a different note depending on buttons pressed
 void playSound()
 {
   int outFreq = midFreq;
+  // Calculate frequency to use
   for (int currButton = 0; currButton < 4; currButton++)
   {
     if (inputStates[currButton] == 1)
@@ -178,6 +190,7 @@ void playSound()
   tone(speakerPin, outFreq, 400);
 }
 
+// Check if inputs were correct
 boolean compareArrays ()
 {
   // No notes first time
@@ -196,6 +209,8 @@ boolean compareArrays ()
   }
   return true;
 }
+
+// Generate a new set of random notes to be outputted next
 void randomNotes()
 {
   // Randomly generate next set of notes
@@ -207,10 +222,13 @@ void randomNotes()
   }
 }
 
+// Pause
 void PAUSE_HANDLER()
 {
-  //pauseState = !pauseState;
+  pauseState = !pauseState;
 }
+
+// Strum
 void STRUM_HANDLER ()
 {
   // Only first strum per set of notes is counted
