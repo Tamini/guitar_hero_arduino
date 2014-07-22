@@ -35,7 +35,7 @@ void setup()
   // Clock pin output
   pinMode(clockPin, OUTPUT);
   // Pause interrupt
-  attachInterrupt(0, PAUSE_HANDLER, HIGH);
+  attachInterrupt(0, PAUSE_HANDLER, CHANGE);
   // Strum
   attachInterrupt(1, STRUM_HANDLER, CHANGE);
   // Just in case, serial
